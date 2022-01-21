@@ -40,7 +40,9 @@ void PositionSparkController::SetPosition(double value) {
 		SetPercentPower(0);
 	}
 	else {
-		pidController.SetReference(value, rev::ControlType::kSmartMotion);
+		//pidController.SetReference(value, rev::ControlType::kSmartMotion);
+		pidController.SetReference(value, rev::CANSparkMax::ControlType::kSmartMotion);
+
 	}
 }
 

@@ -123,7 +123,7 @@ float Shooter::GetDegrees() {
 void Shooter::LimeLightControl(bool controlmode) {
 	
 	auto joyz = Robot::oi->GetJoystick2Z();
-	std::shared_ptr<NetworkTable> table = nt::NetworkTableInstance::GetDefault().GetTable("limelight");
+	std::shared_ptr<nt::NetworkTable> table = nt::NetworkTableInstance::GetDefault().GetTable("limelight");
 	float tx = table->GetNumber("tx", 0.0f);
 	frc::SmartDashboard::PutNumber("TX",tx); //MAX: 15 MIN: -15
 	_gyroCounter++;

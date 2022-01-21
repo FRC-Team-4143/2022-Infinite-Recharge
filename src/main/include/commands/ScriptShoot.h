@@ -17,9 +17,9 @@ public:
 
 private:
 
-	float _seconds;
 	float _angle;
 	float _speed;
+	float _seconds;
 	float _counter;
 };
 

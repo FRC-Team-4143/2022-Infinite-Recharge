@@ -2,7 +2,7 @@
 
 // ==========================================================================
 
-IPickUp::IPickUp(const wpi::Twine& name)
+IPickUp::IPickUp(std::string_view name)
 :	frc::Subsystem(name) {
 }
 

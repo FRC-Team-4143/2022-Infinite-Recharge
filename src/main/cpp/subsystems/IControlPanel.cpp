@@ -2,7 +2,7 @@
 
 // ==========================================================================
 
-IControlPanel::IControlPanel(const wpi::Twine& name)
+IControlPanel::IControlPanel(std::string_view name)
 :	frc::Subsystem(name) {
 }
 

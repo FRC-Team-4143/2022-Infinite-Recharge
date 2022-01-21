@@ -78,6 +78,8 @@
     "thread": "cpp",
     "cinttypes": "cpp",
     "typeinfo": "cpp",
-    "*.inc": "cpp"
+    "*.inc": "cpp",
+    "bitset": "cpp",
+    "regex": "cpp"
   }
 }

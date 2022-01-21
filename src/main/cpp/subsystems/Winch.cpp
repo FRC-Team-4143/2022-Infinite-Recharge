@@ -9,7 +9,7 @@
 Winch::Winch(int canId, int brakeChannel)
 :	IWinch("Winch") {
 	_winch = std::make_unique<TalonFXController>(canId);
-	_winchBrake = std::make_unique<frc::Solenoid>(brakeChannel);
+	_winchBrake = std::make_unique<frc::Solenoid>(frc::PneumaticsModuleType::CTREPCM, brakeChannel);
 	_brakeCounter = 0;
 	_brakeEngaged = false;
 }

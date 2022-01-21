@@ -5,9 +5,9 @@
 
 Climber::Climber(int extenderForwardChannel, int extenderReverseChannel, int boatCanId, int rollerbrakeForwarcChannel, int rollerbrakeReverseChannel)
 :	IClimber("Climber") {
-	_extender = std::make_unique<frc::DoubleSolenoid>(extenderForwardChannel, extenderReverseChannel);
+	_extender = std::make_unique<frc::DoubleSolenoid>(frc::PneumaticsModuleType::CTREPCM, extenderForwardChannel, extenderReverseChannel);
 	_boatroller= std::make_unique<VictorController>(boatCanId);
-	_rollerbrake= std::make_unique<frc::DoubleSolenoid>(rollerbrakeForwarcChannel, rollerbrakeReverseChannel);
+	_rollerbrake= std::make_unique<frc::DoubleSolenoid>(frc::PneumaticsModuleType::CTREPCM, rollerbrakeForwarcChannel, rollerbrakeReverseChannel);
 }
 
 // ==========================================================================

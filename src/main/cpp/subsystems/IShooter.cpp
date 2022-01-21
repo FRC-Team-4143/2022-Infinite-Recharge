@@ -2,7 +2,7 @@
 
 // ==========================================================================
 
-IShooter::IShooter(const wpi::Twine& name)
+IShooter::IShooter(std::string_view name)
 :	frc::Subsystem(name) {
 }
 

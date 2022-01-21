@@ -2,7 +2,7 @@
 
 // ==========================================================================
 
-IWinch::IWinch(const wpi::Twine& name)
+IWinch::IWinch(std::string_view name)
 :	frc::Subsystem(name) {
 }
 
