@@ -22,5 +22,6 @@ private:
 	double kMaxAcc;
 	double kAllErr;
 	rev::CANSparkMax* _motor;
-	//rev::CANPIDController _pidController;
+	rev::SparkMaxPIDController _pidController;
+	rev::SparkMaxRelativeEncoder _encoder;
 };

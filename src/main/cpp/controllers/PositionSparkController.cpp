@@ -13,13 +13,16 @@
 
 #define ENCODER_COUNTS_PER_TURN 42
 
-PositionSparkController::PositionSparkController(rev::CANSparkMax* motor) {
-	_motor = motor;
+PositionSparkController::PositionSparkController(rev::CANSparkMax* motor) 
+: _motor{motor}, _pidController{_motor->GetPIDController()}, _encoder{_motor->GetEncoder()}
+{
+
 	ConfigPID();
 }
 
-PositionSparkController::PositionSparkController(int canId) {
-	_motor = new rev::CANSparkMax(canId, rev::CANSparkMax::MotorType::kBrushless);
+PositionSparkController::PositionSparkController(int canId)
+: _motor{new rev::CANSparkMax(canId, rev::CANSparkMax::MotorType::kBrushless)}, _pidController{_motor->GetPIDController()}, _encoder{_motor->GetEncoder()}
+{
 	ConfigPID();
 }
 
@@ -28,20 +31,19 @@ void PositionSparkController::SetPercentPower(double value) {
 }
 
 double PositionSparkController::GetEncoderPosition() {
-	return _motor->GetEncoder().GetPosition();
+	return _encoder.GetPosition();
 }
 
 void PositionSparkController::SetPosition(double value) {
 	//std::cout << "Set Position" << value << std::endl;
 	//std::cout.flush();
-	auto pidController = _motor->GetPIDController();
 	if (value == 0 && fabs(GetEncoderPosition()) < BOTTOMLIMIT) {
-		//pidController.SetReference(0, rev::ControlType::kVelocity);
+		//_pidController.SetReference(0, rev::ControlType::kVelocity);
 		SetPercentPower(0);
 	}
 	else {
-		//pidController.SetReference(value, rev::ControlType::kSmartMotion);
-		pidController.SetReference(value, rev::CANSparkMax::ControlType::kSmartMotion);
+		//_pidController.SetReference(value, rev::ControlType::kSmartMotion);
+		_pidController.SetReference(value, rev::CANSparkMax::ControlType::kSmartMotion);
 
 	}
 }
@@ -52,17 +54,16 @@ void PositionSparkController::ConfigPID() {
 	kMaxAcc = 6000;
 	kAllErr = 0;
 
-	auto pidController = _motor->GetPIDController();
 	_motor->RestoreFactoryDefaults();
 
-	pidController.SetP(kP);
-	pidController.SetI(kI);
-	pidController.SetD(kD);
-	pidController.SetIZone(kIZONE);
-	pidController.SetFF(kFF);
-	pidController.SetOutputRange(kMINOUTPUT, kMAXOUTPUT);	
-	pidController.SetSmartMotionMaxVelocity(kMaxVel);
-	pidController.SetSmartMotionMinOutputVelocity(kMinVel);
-	pidController.SetSmartMotionMaxAccel(kMaxAcc);
-	pidController.SetSmartMotionAllowedClosedLoopError(kAllErr);
+	_pidController.SetP(kP);
+	_pidController.SetI(kI);
+	_pidController.SetD(kD);
+	_pidController.SetIZone(kIZONE);
+	_pidController.SetFF(kFF);
+	_pidController.SetOutputRange(kMINOUTPUT, kMAXOUTPUT);	
+	_pidController.SetSmartMotionMaxVelocity(kMaxVel);
+	_pidController.SetSmartMotionMinOutputVelocity(kMinVel);
+	_pidController.SetSmartMotionMaxAccel(kMaxAcc);
+	_pidController.SetSmartMotionAllowedClosedLoopError(kAllErr);
 }

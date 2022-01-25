@@ -15,13 +15,15 @@
 
 #define ENCODER_COUNTS_PER_TURN 42
 
-TurretSparkController::TurretSparkController(rev::CANSparkMax* motor) {
-	_motor = motor;
+TurretSparkController::TurretSparkController(rev::CANSparkMax* motor)
+: _motor{motor}, _pidController{_motor->GetPIDController()}, _encoder{_motor->GetEncoder()}
+{
 	ConfigPID();
 }
 
-TurretSparkController::TurretSparkController(int canId) {
-	_motor = new rev::CANSparkMax(canId, rev::CANSparkMax::MotorType::kBrushless);
+TurretSparkController::TurretSparkController(int canId)
+:_motor{new rev::CANSparkMax(canId, rev::CANSparkMax::MotorType::kBrushless)}, _pidController{_motor->GetPIDController()}, _encoder{_motor->GetEncoder()}
+{
 	ConfigPID();
 }
 
@@ -31,21 +33,20 @@ void TurretSparkController::SetPercentPower(double value) {
 
 double TurretSparkController::GetEncoderPosition() {
 	
-	return _motor->GetEncoder().GetPosition() * 360 / (204/22) / (9);
+	return _encoder.GetPosition() * 360 / (204/22) / (9);
 }
 
 void TurretSparkController::SetPosition(double value) {
 	value = value / 360 * (204/22) * (9/1);
 	//std::cout << "Set Position" << value << std::endl;
 	//std::cout.flush();
-	auto pidController = _motor->GetPIDController();
 	if (value == 0 && fabs(GetEncoderPosition()) < BOTTOMLIMIT) {
 		//pidController.SetReference(0, rev::ControlType::kVelocity);
 		SetPercentPower(0);
 	}
 	else if(value >= TOPLIMIT && GetEncoderPosition() > TOPLIMIT) SetPercentPower(0);
 	else {
-		pidController.SetReference(value, rev::ControlType::kSmartMotion);
+		_pidController.SetReference(value, rev::ControlType::kSmartMotion);
 	}
 }
 
@@ -56,21 +57,20 @@ void TurretSparkController::ConfigPID() {
 	kAllErr = 0;
 
 	_motor->RestoreFactoryDefaults();
-	auto pidController = _motor->GetPIDController();
 
-	pidController.SetP(kP);
-	pidController.SetI(kI);
-	pidController.SetD(kD);
-	pidController.SetIZone(kIZONE);
-	pidController.SetFF(kFF);
-	pidController.SetOutputRange(kMINOUTPUT, kMAXOUTPUT);	
-	pidController.SetSmartMotionMaxVelocity(kMaxVel);
-	pidController.SetSmartMotionMinOutputVelocity(kMinVel);
-	pidController.SetSmartMotionMaxAccel(kMaxAcc);
-	pidController.SetSmartMotionAllowedClosedLoopError(kAllErr);
+	_pidController.SetP(kP);
+	_pidController.SetI(kI);
+	_pidController.SetD(kD);
+	_pidController.SetIZone(kIZONE);
+	_pidController.SetFF(kFF);
+	_pidController.SetOutputRange(kMINOUTPUT, kMAXOUTPUT);	
+	_pidController.SetSmartMotionMaxVelocity(kMaxVel);
+	_pidController.SetSmartMotionMinOutputVelocity(kMinVel);
+	_pidController.SetSmartMotionMaxAccel(kMaxAcc);
+	_pidController.SetSmartMotionAllowedClosedLoopError(kAllErr);
 	_motor->SetSmartCurrentLimit(5);
 }
 
 void TurretSparkController::ZeroPosition() {
-	_motor->GetEncoder().SetPosition(0);
+	_encoder.SetPosition(0);
 }
